@@ -1,0 +1,8 @@
+project:
+  version: @project.version@
+spring:
+  application:
+    name: @project.artifactId@
+  cloud:
+    config:
+      enabled: false

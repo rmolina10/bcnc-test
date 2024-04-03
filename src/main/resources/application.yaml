@@ -1,0 +1,33 @@
+project:
+  version: @project.version@
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  shutdown: graceful
+
+management:
+  info:
+    git:
+      mode: full
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, info
+
+spring:
+  application:
+    name: @project.artifactId@
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/bcnc_products
+      default-schema: ${MONGODB_SCHEMA:bcnc_products}
+
+logging:
+  level:
+    root: INFO
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+  custom:
+    request-logging-filter: true

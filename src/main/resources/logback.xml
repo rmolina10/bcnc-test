@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <!-- Regular expressions are to add tabs at the begining of each new line.
+     In this way ELK is able to merge multiline traces in one message. -->
+  <appender name="ACCESS" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.out</target>
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] ACCESS %replace(%msg){'([\r\n]+)([^\s])','$1 $2'}%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.out</target>
+    <encoder>
+      <charset>UTF-8</charset>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] EVENT %level [%thread] %logger{36} - %replace(%replace(%msg%n%ex){'([\r\n]+)([^\s])','$1 $2'}){'[\r\n]+$',''}%nopex%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="com.example.infrastructure.rest.spring.AccessLogFilter"
+    level="INFO" additivity="false">
+    <appender-ref ref="ACCESS"/>
+  </logger>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+</configuration>
