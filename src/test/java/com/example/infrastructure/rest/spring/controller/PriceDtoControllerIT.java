@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.Test;
@@ -25,11 +24,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest
-@DirtiesContext
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
+@DirtiesContext
 class PriceDtoControllerIT {
 
   @Autowired private MockMvc mockMvc;
@@ -54,18 +53,18 @@ class PriceDtoControllerIT {
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(1)
-                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(35.5f)
+                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0))
+                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
+                .price(55.5f)
                 .curr(CURRENCY)
                 .build(),
             PriceResponseWebDto.builder()
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(5)
-                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(145.1f)
+                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0))
+                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59))
+                .price(175.88f)
                 .curr(CURRENCY)
                 .build());
 
@@ -107,27 +106,27 @@ class PriceDtoControllerIT {
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(1)
-                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(35.5f)
+                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0))
+                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
+                .price(55.5f)
                 .curr(CURRENCY)
                 .build(),
             PriceResponseWebDto.builder()
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(2)
-                .startDate(LocalDateTime.of(2020, 6, 14, 15, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 6, 14, 18, 30, 0).toInstant(ZoneOffset.UTC))
-                .price(25.45f)
+                .startDate(LocalDateTime.of(2020, 6, 14, 15, 0))
+                .endDate(LocalDateTime.of(2020, 6, 14, 18, 30, 0))
+                .price(25.99f)
                 .curr(CURRENCY)
                 .build(),
             PriceResponseWebDto.builder()
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(5)
-                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(145.1f)
+                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0))
+                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59))
+                .price(175.88f)
                 .curr(CURRENCY)
                 .build());
 
@@ -169,18 +168,18 @@ class PriceDtoControllerIT {
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(1)
-                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(35.5f)
+                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0))
+                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
+                .price(55.5f)
                 .curr(CURRENCY)
                 .build(),
             PriceResponseWebDto.builder()
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(5)
-                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(145.1f)
+                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0))
+                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59))
+                .price(175.88f)
                 .curr(CURRENCY)
                 .build());
 
@@ -222,27 +221,27 @@ class PriceDtoControllerIT {
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(1)
-                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(35.5f)
+                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0))
+                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
+                .price(55.5f)
                 .curr(CURRENCY)
                 .build(),
             PriceResponseWebDto.builder()
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(3)
-                .startDate(LocalDateTime.of(2020, 6, 15, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 6, 15, 11, 0, 0).toInstant(ZoneOffset.UTC))
-                .price(30.5f)
+                .startDate(LocalDateTime.of(2020, 6, 15, 0, 0))
+                .endDate(LocalDateTime.of(2020, 6, 15, 11, 0, 0))
+                .price(40.5f)
                 .curr(CURRENCY)
                 .build(),
             PriceResponseWebDto.builder()
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(5)
-                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(145.1f)
+                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0))
+                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59))
+                .price(175.88f)
                 .curr(CURRENCY)
                 .build());
 
@@ -284,17 +283,17 @@ class PriceDtoControllerIT {
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(1)
-                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(35.5f)
+                .startDate(LocalDateTime.of(2020, 6, 14, 0, 0))
+                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
+                .price(55.5f)
                 .curr(CURRENCY)
                 .build(),
             PriceResponseWebDto.builder()
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(4)
-                .startDate(LocalDateTime.of(2020, 6, 15, 16, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
+                .startDate(LocalDateTime.of(2020, 6, 15, 16, 0))
+                .endDate(LocalDateTime.of(2020, 12, 31, 23, 59, 59))
                 .price(47.55f)
                 .curr(CURRENCY)
                 .build(),
@@ -302,9 +301,9 @@ class PriceDtoControllerIT {
                 .brandId(BRAND_ID)
                 .productId(PRODUCT_ID)
                 .priceList(5)
-                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0).toInstant(ZoneOffset.UTC))
-                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59).toInstant(ZoneOffset.UTC))
-                .price(145.1f)
+                .startDate(LocalDateTime.of(2020, 1, 15, 0, 0))
+                .endDate(LocalDateTime.of(2020, 10, 31, 23, 59, 59))
+                .price(175.88f)
                 .curr(CURRENCY)
                 .build());
 

@@ -1,7 +1,7 @@
 package com.example.infrastructure.rest.spring.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import lombok.*;
 
 @Generated
@@ -21,10 +21,10 @@ public class PriceResponseWebDto {
   private Integer priceList;
 
   @Schema(description = "Start Date", example = "2023-12-01T00:00:00.000")
-  private Instant startDate;
+  private LocalDateTime startDate;
 
   @Schema(description = "End Date", example = "2023-12-31T23:37:08.875")
-  private Instant endDate;
+  private LocalDateTime endDate;
 
   @Schema(description = "Price", example = "100.45")
   private Float price;

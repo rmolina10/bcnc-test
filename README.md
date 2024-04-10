@@ -14,13 +14,11 @@ Run the microservice following next steps
     mvn com.spotify.fmt:fmt-maven-plugin:format clean install
  ```
 
-3. For local environment, you need to connect to MongoDB database.
-   In the Docker-Compose folder there is a docker image to run MongoDB.
-
-Into docker-compose folder execute the next command:
+3. For local environment, you can to visualize the H2 database, 
+   putting the following url in the browser:
 
  ```
-    docker-compose up -d
+    http://localhost:8080/h2-console
  ```
 
 4. We could now run the microservice with the next command:

@@ -1,6 +1,6 @@
 package com.example.domain.price.model;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +16,9 @@ public class PriceResponse {
 
   private Integer priceList;
 
-  private Instant startDate;
+  private LocalDateTime startDate;
 
-  private Instant endDate;
+  private LocalDateTime endDate;
 
   private Integer priority;
 

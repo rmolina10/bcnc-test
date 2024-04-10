@@ -1,9 +1,0 @@
-{
-  "databaseChangeLog": [
-    {
-      "include": {
-        "file": "database/changes/prices-insert-v1.0.0.json"
-      }
-    }
-  ]
-}

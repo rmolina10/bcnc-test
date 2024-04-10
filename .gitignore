@@ -7,3 +7,4 @@ bin/
 *.iml
 .swagger-codegen/
 .openapi-generator/
+/src/main/resources/data/

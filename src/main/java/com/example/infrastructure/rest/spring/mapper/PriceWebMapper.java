@@ -5,8 +5,10 @@ import com.example.domain.exception.ProductValidationException;
 import com.example.domain.price.model.PriceRequest;
 import com.example.domain.price.model.PriceResponse;
 import com.example.infrastructure.rest.spring.dto.PriceResponseWebDto;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -21,18 +23,19 @@ public interface PriceWebMapper {
   @Mapping(
       source = "dateApplication",
       target = "dateApplication",
-      qualifiedByName = "stringToInstant")
+      qualifiedByName = "stringToLocalDateTime")
   PriceRequest toDomain(Integer brandId, Integer productId, String dateApplication);
 
   PriceResponseWebDto toDto(PriceResponse priceResponse);
 
   List<PriceResponseWebDto> toDto(List<PriceResponse> priceResponseList);
 
-  @Named("stringToInstant")
-  default Instant stringToInstant(String dateApplication) {
+  @Named("stringToLocalDateTime")
+  default LocalDateTime stringToLocalDateTime(String dateApplication) {
     try {
-      ZonedDateTime zonedDateTime = ZonedDateTime.parse(dateApplication);
-      return zonedDateTime.toInstant();
+      ZonedDateTime zonedDateTime =
+          ZonedDateTime.parse(dateApplication, DateTimeFormatter.ISO_DATE_TIME);
+      return zonedDateTime.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
     } catch (DateTimeParseException e) {
       throw new ProductValidationException(
           ErrorsEnum.VALIDATION_EXCEPTION_INVALID_DATE_APPLICATION, e);

@@ -1,21 +1,7 @@
 spring:
   main:
     banner-mode: "off"
-  mongodb:
-    embedded:
-      version: 7.0.0
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: bcnc_products
 
 logging:
   level:
     com.*: DEBUG
-
-de:
-  flapdoodle:
-    mongodb:
-      embedded:
-        version: 7.0.0

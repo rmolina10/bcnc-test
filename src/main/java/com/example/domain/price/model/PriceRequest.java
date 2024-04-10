@@ -1,7 +1,7 @@
 package com.example.domain.price.model;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +17,5 @@ public class PriceRequest implements Serializable {
 
   private Integer productId;
 
-  private Instant dateApplication;
+  private LocalDateTime dateApplication;
 }

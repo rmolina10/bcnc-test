@@ -12,14 +12,11 @@ import com.example.domain.exception.ProductRepositoryException;
 import com.example.domain.price.model.PriceRequest;
 import com.example.domain.price.model.PriceResponse;
 import com.example.infrastructure.database.springdata.mapper.PriceMapper;
-import com.example.infrastructure.database.springdata.model.jpa.PriceDto;
+import com.example.infrastructure.database.springdata.model.jpa.PriceEntity;
 import com.example.tests.LoggingEventUtility;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,19 +32,16 @@ class SpringDataPriceQueriesRepositoryTest {
   @Mock private PriceMapper mapper;
   @Mock private JpaPriceRepository jpaPriceRepository;
 
-  private static final String ID = UUID.randomUUID().toString();
+  private static final Long ID = 1L;
   private static final Integer BRAND_ID = 1;
   private static final Integer PRODUCT_ID = 100;
-  private static final Instant DATE_APPLICATION =
-      LocalDateTime.of(2024, 4, 1, 17, 15, 0, 0).toInstant(ZoneOffset.UTC);
+  private static final LocalDateTime DATE_APPLICATION = LocalDateTime.of(2024, 4, 1, 17, 15, 0, 0);
   private static final Integer PRICE_LIST = 1;
   private static final Integer PRIORITY = 1;
   private static final Float PRICE = 148.98f;
   private static final String CURRENCY = "EURO";
-  private static final Instant START_DATE =
-      LocalDateTime.of(2024, 4, 1, 0, 0, 0, 0).toInstant(ZoneOffset.UTC);
-  private static final Instant END_DATE =
-      LocalDateTime.of(2024, 4, 30, 23, 59, 59, 999).toInstant(ZoneOffset.UTC);
+  private static final LocalDateTime START_DATE = LocalDateTime.of(2024, 4, 1, 0, 0, 0, 0);
+  private static final LocalDateTime END_DATE = LocalDateTime.of(2024, 4, 30, 23, 59, 59, 999);
   private static final String ERROR_MESSAGE = "some error message";
 
   private ListAppender<ILoggingEvent> loggingEventListAppender;
@@ -68,15 +62,16 @@ class SpringDataPriceQueriesRepositoryTest {
             .productId(PRODUCT_ID)
             .dateApplication(DATE_APPLICATION)
             .build();
-    List<PriceDto> priceDtoList = getPriceList();
+    List<PriceEntity> PriceEntityList = getPriceList();
     when(jpaPriceRepository.findPricesByBrandIdAndProductIdAndDateApplication(
             priceRequest.getBrandId(),
             priceRequest.getProductId(),
             priceRequest.getDateApplication()))
-        .thenReturn(priceDtoList);
+        .thenReturn(PriceEntityList);
 
-    List<PriceResponse> expectedPriceResponseList = getPriceResponseListFromAreaList(priceDtoList);
-    when(mapper.toDomain(priceDtoList)).thenReturn(expectedPriceResponseList);
+    List<PriceResponse> expectedPriceResponseList =
+        getPriceResponseListFromAreaList(PriceEntityList);
+    when(mapper.toDomain(PriceEntityList)).thenReturn(expectedPriceResponseList);
 
     Level expectedLogLevel = Level.DEBUG;
     String expectedLog = "Getting price list by request";
@@ -93,7 +88,7 @@ class SpringDataPriceQueriesRepositoryTest {
             priceRequest.getBrandId(),
             priceRequest.getProductId(),
             priceRequest.getDateApplication());
-    verify(mapper).toDomain(priceDtoList);
+    verify(mapper).toDomain(PriceEntityList);
 
     // Logging
     assertEquals(1, loggingEventListAppender.list.size());
@@ -145,8 +140,8 @@ class SpringDataPriceQueriesRepositoryTest {
     }
   }
 
-  private List<PriceResponse> getPriceResponseListFromAreaList(List<PriceDto> priceDtoList) {
-    return priceDtoList.stream()
+  private List<PriceResponse> getPriceResponseListFromAreaList(List<PriceEntity> PriceEntityList) {
+    return PriceEntityList.stream()
         .map(
             areaEntity ->
                 PriceResponse.builder()
@@ -162,12 +157,12 @@ class SpringDataPriceQueriesRepositoryTest {
         .collect(Collectors.toList());
   }
 
-  private List<PriceDto> getPriceList() {
+  private List<PriceEntity> getPriceList() {
     return Collections.singletonList(getPrice());
   }
 
-  private PriceDto getPrice() {
-    return new PriceDto(
+  private PriceEntity getPrice() {
+    return new PriceEntity(
         ID, BRAND_ID, START_DATE, END_DATE, PRICE_LIST, PRODUCT_ID, PRIORITY, PRICE, CURRENCY);
   }
 }
