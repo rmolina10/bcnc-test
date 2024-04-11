@@ -6,7 +6,7 @@ import com.example.domain.price.PriceQueries;
 import com.example.domain.price.model.PriceRequest;
 import com.example.domain.price.model.PriceResponse;
 import com.example.infrastructure.database.springdata.mapper.PriceMapper;
-import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -20,16 +20,17 @@ public class SpringDataPriceQueriesRepository implements PriceQueries {
   private final JpaPriceRepository jpaPriceRepository;
 
   @Override
-  public List<PriceResponse> findAllByRequest(PriceRequest priceRequest) {
-    log.debug("Getting price list by request");
+  public Optional<PriceResponse> findPriceByRequest(PriceRequest priceRequest) {
+    log.debug("Getting a price by request");
     try {
-      return mapper.toDomain(
-          jpaPriceRepository.findPricesByBrandIdAndProductIdAndDateApplication(
+      return jpaPriceRepository
+          .findPricesByBrandIdAndProductIdAndDateApplication(
               priceRequest.getBrandId(),
               priceRequest.getProductId(),
-              priceRequest.getDateApplication()));
+              priceRequest.getDateApplication())
+          .map(mapper::toDomain);
     } catch (Exception exception) {
-      String errorMessage = "Unable to retrieve Area list by ids from database.";
+      String errorMessage = "Unable to retrieve a price by request from database.";
       throw new ProductRepositoryException(
           ErrorsEnum.REPOSITORY_EXCEPTION, exception, errorMessage);
     }

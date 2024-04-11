@@ -2,9 +2,9 @@ package com.example.domain.price;
 
 import com.example.domain.price.model.PriceRequest;
 import com.example.domain.price.model.PriceResponse;
-import java.util.List;
+import java.util.Optional;
 
 public interface PriceQueries {
 
-  List<PriceResponse> findAllByRequest(PriceRequest priceRequest);
+  Optional<PriceResponse> findPriceByRequest(PriceRequest priceRequest);
 }

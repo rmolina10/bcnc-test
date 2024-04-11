@@ -12,8 +12,6 @@ import com.example.domain.price.model.PriceResponse;
 import com.example.infrastructure.rest.spring.dto.PriceResponseWebDto;
 import com.example.infrastructure.rest.spring.mapper.PriceWebMapper;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,8 +29,8 @@ class PriceDtoControllerTest {
   @Mock private PriceWebMapper priceWebMapper;
 
   private static PriceRequest priceRequest;
-  private static List<PriceResponse> priceResponseList;
-  private static List<PriceResponseWebDto> priceResponseWebDtoList;
+  private static PriceResponse priceResponse;
+  private static PriceResponseWebDto priceResponseWebDto;
   private static final Integer BRAND_ID = 1;
   private static final Integer PRODUCT_ID = 100;
   private static final LocalDateTime DATE_APPLICATION = LocalDateTime.of(2024, 4, 1, 17, 15, 0, 0);
@@ -51,49 +49,46 @@ class PriceDtoControllerTest {
             .productId(PRODUCT_ID)
             .dateApplication(DATE_APPLICATION)
             .build();
-    priceResponseList =
-        Collections.singletonList(
-            PriceResponse.builder()
-                .brandId(BRAND_ID)
-                .productId(PRODUCT_ID)
-                .priceList(PRICE_LIST)
-                .startDate(START_DATE)
-                .endDate(END_DATE)
-                .priority(PRIORITY)
-                .price(PRICE)
-                .curr(CURRENCY)
-                .build());
-    priceResponseWebDtoList =
-        Collections.singletonList(
-            PriceResponseWebDto.builder()
-                .brandId(BRAND_ID)
-                .productId(PRODUCT_ID)
-                .priceList(PRICE_LIST)
-                .startDate(START_DATE)
-                .endDate(END_DATE)
-                .price(PRICE)
-                .curr(CURRENCY)
-                .build());
+    priceResponse =
+        PriceResponse.builder()
+            .brandId(BRAND_ID)
+            .productId(PRODUCT_ID)
+            .priceList(PRICE_LIST)
+            .startDate(START_DATE)
+            .endDate(END_DATE)
+            .priority(PRIORITY)
+            .price(PRICE)
+            .curr(CURRENCY)
+            .build();
+    priceResponseWebDto =
+        PriceResponseWebDto.builder()
+            .brandId(BRAND_ID)
+            .productId(PRODUCT_ID)
+            .priceList(PRICE_LIST)
+            .startDate(START_DATE)
+            .endDate(END_DATE)
+            .price(PRICE)
+            .curr(CURRENCY)
+            .build();
   }
 
   @Test
   void getPrice() {
     // GIVEN
     doReturn(priceRequest).when(priceWebMapper).toDomain(anyInt(), anyInt(), anyString());
-    doReturn(priceResponseList).when(priceFinder).findByRequest(any(PriceRequest.class));
-    doReturn(priceResponseWebDtoList).when(priceWebMapper).toDto(anyList());
+    doReturn(priceResponse).when(priceFinder).findPriceByRequest(any(PriceRequest.class));
+    doReturn(priceResponseWebDto).when(priceWebMapper).toDto(any(PriceResponse.class));
 
     // WHEN
-    ResponseEntity<List<PriceResponseWebDto>> result =
+    ResponseEntity<PriceResponseWebDto> result =
         priceController.getPrice(BRAND_ID, PRODUCT_ID, DATE_APPLICATION.toString());
 
     // THEN
     assertEquals(HttpStatus.OK, result.getStatusCode());
     assertNotNull(result.getBody());
-    assertEquals(1, result.getBody().size());
-    assertEquals(priceResponseWebDtoList, result.getBody());
+    assertEquals(priceResponseWebDto, result.getBody());
     verify(priceWebMapper).toDomain(BRAND_ID, PRODUCT_ID, DATE_APPLICATION.toString());
-    verify(priceFinder).findByRequest(priceRequest);
-    verify(priceWebMapper).toDto(priceResponseList);
+    verify(priceFinder).findPriceByRequest(priceRequest);
+    verify(priceWebMapper).toDto(priceResponse);
   }
 }

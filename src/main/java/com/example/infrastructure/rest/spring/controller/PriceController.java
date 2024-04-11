@@ -4,7 +4,6 @@ import com.example.application.port.out.price.PriceFinder;
 import com.example.infrastructure.rest.spring.api.PriceApi;
 import com.example.infrastructure.rest.spring.dto.PriceResponseWebDto;
 import com.example.infrastructure.rest.spring.mapper.PriceWebMapper;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +20,11 @@ public class PriceController implements PriceApi {
   private final PriceWebMapper priceWebMapper;
 
   @Override
-  public ResponseEntity<List<PriceResponseWebDto>> getPrice(
+  public ResponseEntity<PriceResponseWebDto> getPrice(
       Integer brandId, Integer productId, String dateApplication) {
     return ResponseEntity.ok(
         priceWebMapper.toDto(
-            priceFinder.findByRequest(
+            priceFinder.findPriceByRequest(
                 priceWebMapper.toDomain(brandId, productId, dateApplication))));
   }
 }

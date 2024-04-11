@@ -166,6 +166,39 @@ class ApiErrorHandlerTest {
   }
 
   @Test
+  void handleProductNotFoundException() {
+    // Given
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setServletPath(DEFAULT_PATH);
+
+    ProductNotFoundException productNotFoundException =
+        new ProductNotFoundException(ErrorsEnum.PRICE_NOT_FOUND);
+
+    Level expectedLogLevel = Level.ERROR;
+
+    // When
+    ResponseEntity<ErrorResponseWebDto> response =
+        apiErrorHandler.handleProductNotFoundException(productNotFoundException, request);
+
+    // Then
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+    ErrorResponseWebDto errorResponseWebDto = response.getBody();
+    assertNotNull(errorResponseWebDto);
+
+    assertEquals(ErrorsEnum.PRICE_NOT_FOUND.getCode(), errorResponseWebDto.getCode());
+    assertEquals(ErrorsEnum.PRICE_NOT_FOUND.getDescription(), errorResponseWebDto.getDescription());
+    assertEquals(ErrorsEnum.PRICE_NOT_FOUND.getMessage(), errorResponseWebDto.getMessage());
+    assertNotNull(errorResponseWebDto.getTimestamp());
+    assertEquals(DEFAULT_PATH, errorResponseWebDto.getPath());
+
+    // Logging
+    assertEquals(1, loggingEventListAppender.list.size());
+    assertEquals(expectedLogLevel, loggingEventListAppender.list.get(0).getLevel());
+    assertEquals(DEFAULT_LOG_MESSAGE, loggingEventListAppender.list.get(0).getFormattedMessage());
+  }
+
+  @Test
   void handleProductValidationException() {
     // Given
     MockHttpServletRequest request = new MockHttpServletRequest();

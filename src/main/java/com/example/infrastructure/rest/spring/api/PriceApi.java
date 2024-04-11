@@ -4,13 +4,11 @@ import com.example.infrastructure.rest.spring.dto.ErrorResponseWebDto;
 import com.example.infrastructure.rest.spring.dto.PriceResponseWebDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,11 +25,7 @@ public interface PriceApi {
         @ApiResponse(
             responseCode = "200",
             description = "OK",
-            content =
-                @Content(
-                    array =
-                        @ArraySchema(
-                            schema = @Schema(implementation = PriceResponseWebDto.class)))),
+            content = @Content(schema = @Schema(implementation = PriceResponseWebDto.class))),
         @ApiResponse(
             responseCode = "401",
             description = "Unauthorized",
@@ -46,7 +40,7 @@ public interface PriceApi {
             content = @Content(schema = @Schema(implementation = ErrorResponseWebDto.class)))
       })
   @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<List<PriceResponseWebDto>> getPrice(
+  ResponseEntity<PriceResponseWebDto> getPrice(
       @Parameter(name = "brandId", description = "Brand identifier", example = "1")
           @RequestParam(name = "brandId", required = true)
           Integer brandId,

@@ -1,7 +1,6 @@
 package com.example.infrastructure.database.springdata.repository.price;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import ch.qos.logback.classic.Level;
@@ -15,9 +14,7 @@ import com.example.infrastructure.database.springdata.mapper.PriceMapper;
 import com.example.infrastructure.database.springdata.model.jpa.PriceEntity;
 import com.example.tests.LoggingEventUtility;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +51,7 @@ class SpringDataPriceQueriesRepositoryTest {
   }
 
   @Test
-  void findAllByRequest() {
+  void findPriceByRequest() {
     // Given
     PriceRequest priceRequest =
         PriceRequest.builder()
@@ -62,33 +59,32 @@ class SpringDataPriceQueriesRepositoryTest {
             .productId(PRODUCT_ID)
             .dateApplication(DATE_APPLICATION)
             .build();
-    List<PriceEntity> PriceEntityList = getPriceList();
+    PriceEntity priceEntity = getPriceEntity();
     when(jpaPriceRepository.findPricesByBrandIdAndProductIdAndDateApplication(
             priceRequest.getBrandId(),
             priceRequest.getProductId(),
             priceRequest.getDateApplication()))
-        .thenReturn(PriceEntityList);
+        .thenReturn(Optional.of(priceEntity));
 
-    List<PriceResponse> expectedPriceResponseList =
-        getPriceResponseListFromAreaList(PriceEntityList);
-    when(mapper.toDomain(PriceEntityList)).thenReturn(expectedPriceResponseList);
+    Optional<PriceResponse> expectedPriceResponse = getPriceResponseFromPriceEntity(priceEntity);
+    when(mapper.toDomain(priceEntity)).thenReturn(expectedPriceResponse.get());
 
     Level expectedLogLevel = Level.DEBUG;
-    String expectedLog = "Getting price list by request";
+    String expectedLog = "Getting a price by request";
 
     // When
-    List<PriceResponse> responsePriceList =
-        springDataPriceQueriesRepository.findAllByRequest(priceRequest);
+    Optional<PriceResponse> priceResponse =
+        springDataPriceQueriesRepository.findPriceByRequest(priceRequest);
 
     // Then
-    assertEquals(expectedPriceResponseList, responsePriceList);
+    assertEquals(expectedPriceResponse, priceResponse);
 
     verify(jpaPriceRepository)
         .findPricesByBrandIdAndProductIdAndDateApplication(
             priceRequest.getBrandId(),
             priceRequest.getProductId(),
             priceRequest.getDateApplication());
-    verify(mapper).toDomain(PriceEntityList);
+    verify(mapper).toDomain(priceEntity);
 
     // Logging
     assertEquals(1, loggingEventListAppender.list.size());
@@ -97,7 +93,45 @@ class SpringDataPriceQueriesRepositoryTest {
   }
 
   @Test
-  void findAllByRequest_throwsProductRepositoryException() {
+  void findPriceByRequest_emptyResponse() {
+    // Given
+    PriceRequest priceRequest =
+        PriceRequest.builder()
+            .brandId(BRAND_ID)
+            .productId(PRODUCT_ID)
+            .dateApplication(DATE_APPLICATION)
+            .build();
+    when(jpaPriceRepository.findPricesByBrandIdAndProductIdAndDateApplication(
+            priceRequest.getBrandId(),
+            priceRequest.getProductId(),
+            priceRequest.getDateApplication()))
+        .thenReturn(Optional.empty());
+
+    Level expectedLogLevel = Level.DEBUG;
+    String expectedLog = "Getting a price by request";
+
+    // When
+    Optional<PriceResponse> priceResponse =
+        springDataPriceQueriesRepository.findPriceByRequest(priceRequest);
+
+    // Then
+    assertEquals(Optional.empty(), priceResponse);
+
+    verify(jpaPriceRepository)
+        .findPricesByBrandIdAndProductIdAndDateApplication(
+            priceRequest.getBrandId(),
+            priceRequest.getProductId(),
+            priceRequest.getDateApplication());
+    verifyNoInteractions(mapper);
+
+    // Logging
+    assertEquals(1, loggingEventListAppender.list.size());
+    assertEquals(expectedLogLevel, loggingEventListAppender.list.get(0).getLevel());
+    assertEquals(expectedLog, loggingEventListAppender.list.get(0).getFormattedMessage());
+  }
+
+  @Test
+  void findPriceByRequest_throwsProductRepositoryException() {
     // Given
     Exception runtimeException = new RuntimeException(ERROR_MESSAGE);
     PriceRequest priceRequest =
@@ -114,11 +148,11 @@ class SpringDataPriceQueriesRepositoryTest {
             priceRequest.getDateApplication());
 
     Level expectedLogLevel = Level.DEBUG;
-    String expectedLog = "Getting price list by request";
+    String expectedLog = "Getting a price by request";
 
     try {
       // When
-      springDataPriceQueriesRepository.findAllByRequest(priceRequest);
+      springDataPriceQueriesRepository.findPriceByRequest(priceRequest);
       fail();
     } catch (ProductRepositoryException exception) {
       // Then
@@ -140,28 +174,21 @@ class SpringDataPriceQueriesRepositoryTest {
     }
   }
 
-  private List<PriceResponse> getPriceResponseListFromAreaList(List<PriceEntity> PriceEntityList) {
-    return PriceEntityList.stream()
-        .map(
-            areaEntity ->
-                PriceResponse.builder()
-                    .brandId(BRAND_ID)
-                    .productId(PRODUCT_ID)
-                    .priceList(PRICE_LIST)
-                    .startDate(START_DATE)
-                    .endDate(END_DATE)
-                    .priority(PRIORITY)
-                    .price(PRICE)
-                    .curr(CURRENCY)
-                    .build())
-        .collect(Collectors.toList());
+  private Optional<PriceResponse> getPriceResponseFromPriceEntity(PriceEntity priceEntity) {
+    return Optional.of(
+        PriceResponse.builder()
+            .brandId(priceEntity.getBrandId())
+            .productId(priceEntity.getProductId())
+            .priceList(priceEntity.getPriceList())
+            .startDate(priceEntity.getStartDate())
+            .endDate(priceEntity.getEndDate())
+            .priority(priceEntity.getPriority())
+            .price(priceEntity.getPrice())
+            .curr(priceEntity.getCurr())
+            .build());
   }
 
-  private List<PriceEntity> getPriceList() {
-    return Collections.singletonList(getPrice());
-  }
-
-  private PriceEntity getPrice() {
+  private PriceEntity getPriceEntity() {
     return new PriceEntity(
         ID, BRAND_ID, START_DATE, END_DATE, PRICE_LIST, PRODUCT_ID, PRIORITY, PRICE, CURRENCY);
   }

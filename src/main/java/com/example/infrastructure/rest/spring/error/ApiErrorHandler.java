@@ -38,6 +38,12 @@ public class ApiErrorHandler extends ResponseEntityExceptionHandler {
     return buildErrorResponseProductException(ex, HttpStatus.INTERNAL_SERVER_ERROR, request);
   }
 
+  @ExceptionHandler(ProductNotFoundException.class)
+  public ResponseEntity<ErrorResponseWebDto> handleProductNotFoundException(
+      ProductNotFoundException ex, HttpServletRequest request) {
+    return buildErrorResponseProductException(ex, HttpStatus.NOT_FOUND, request);
+  }
+
   @ExceptionHandler(ProductValidationException.class)
   public ResponseEntity<ErrorResponseWebDto> handleProductValidationException(
       ProductValidationException ex, HttpServletRequest request) {

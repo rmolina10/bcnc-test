@@ -1,14 +1,11 @@
 package com.example.application.usecase.price;
 
 import com.example.application.port.out.price.PriceFinder;
+import com.example.domain.exception.ErrorsEnum;
+import com.example.domain.exception.ProductNotFoundException;
 import com.example.domain.price.PriceQueries;
 import com.example.domain.price.model.PriceRequest;
 import com.example.domain.price.model.PriceResponse;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,21 +16,14 @@ public class PriceFinderUseCase implements PriceFinder {
 
   private final PriceQueries priceQueries;
 
-  public List<PriceResponse> findByRequest(@NonNull PriceRequest priceRequest) {
+  public PriceResponse findPriceByRequest(@NonNull PriceRequest priceRequest) {
     log.debug(
-        "Searching prices with parameter 'brandId': {}, 'productId': {}, 'dateApplication': {}",
+        "Searching a price with parameter 'brandId': {}, 'productId': {}, 'dateApplication': {}",
         priceRequest.getBrandId(),
         priceRequest.getProductId(),
         priceRequest.getDateApplication());
-    List<PriceResponse> priceResponseList = priceQueries.findAllByRequest(priceRequest);
-    return priceResponseList.stream()
-        .collect(
-            Collectors.toMap(
-                PriceResponse::getPriceList,
-                Function.identity(),
-                BinaryOperator.maxBy(Comparator.comparingInt(PriceResponse::getPriority))))
-        .values()
-        .stream()
-        .toList();
+    return priceQueries
+        .findPriceByRequest(priceRequest)
+        .orElseThrow(() -> new ProductNotFoundException(ErrorsEnum.PRICE_NOT_FOUND));
   }
 }

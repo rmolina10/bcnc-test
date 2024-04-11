@@ -13,6 +13,8 @@ public enum ErrorsEnum {
   INTERNAL_SERVER_ERROR("GEN006", "Internal server error", ""),
   BAD_REQUEST("GEN007", "Bad request", ""),
 
+  PRICE_NOT_FOUND("PRI001", "Price not Found", "There is no price for this request."),
+
   VALIDATION_EXCEPTION_INVALID_DATE_APPLICATION(
       "VALIDATION001",
       "Validation exception",

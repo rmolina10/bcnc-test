@@ -59,18 +59,4 @@
             VALUES (1, '2020-06-15 16:00:00.000', '2020-12-31 23:59:59.000', 4, 35455, 2, 47.55, 'EUR')
         </sql>
     </changeSet>
-
-    <changeSet id="Date-prices-9" author="1" >
-        <sql>
-            INSERT INTO PRICES (BRAND_ID, START_DATE, END_DATE, PRICE_LIST, PRODUCT_ID, PRIORITY, PRICE, CURR)
-            VALUES (1, '2020-01-15 00:00:00.000', '2020-10-31 23:59:59.000', 5, 35455, 0, 145.1, 'EUR')
-        </sql>
-    </changeSet>
-
-    <changeSet id="Date-prices-10" author="1" >
-        <sql>
-            INSERT INTO PRICES (BRAND_ID, START_DATE, END_DATE, PRICE_LIST, PRODUCT_ID, PRIORITY, PRICE, CURR)
-            VALUES (1, '2020-01-15 00:00:00.000', '2020-10-31 23:59:59.000', 5, 35455, 1, 175.88, 'EUR')
-        </sql>
-    </changeSet>
 </databaseChangeLog>
