@@ -1,0 +1,51 @@
+project:
+  version: @project.version@
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  shutdown: graceful
+
+management:
+  info:
+    git:
+      mode: full
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, info
+
+spring:
+  application:
+    name: @project.artifactId@
+  datasource:
+    url: jdbc:h2:file:./src/main/resources/data/products
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: false
+
+  liquibase:
+    enabled: true
+    change-log: classpath:database/changelog/changelog-master.xml
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: INFO
+    liquibase: INFO
+  custom:
+    request-logging-filter: true
